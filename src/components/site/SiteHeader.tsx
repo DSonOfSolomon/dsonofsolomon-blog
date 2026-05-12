@@ -1,4 +1,9 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { FiMenu, FiX } from "react-icons/fi";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -8,25 +13,76 @@ const navLinks = [
 ];
 
 export default function SiteHeader() {
+  const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
-    <header className="border-b border-gray-200 bg-white">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
-        <Link href="/" className="text-lg font-semibold tracking-tight">
-        D•sonofSolomon
+    <header className="border-b border-white/10 bg-[#0a192f] text-white">
+      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
+        <Link href="/" className="text-base font-semibold tracking-tight">
+          DSonOfSolomon
         </Link>
 
-        <nav className="flex items-center gap-5 text-sm text-gray-600">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="transition hover:text-gray-950"
-            >
-              {link.label}
-            </Link>
-          ))}
+        {/* Desktop nav */}
+        <nav className="hidden items-center gap-6 text-sm md:flex">
+          {navLinks.map((link) => {
+            const isActive =
+              pathname === link.href ||
+              (link.href !== "/" && pathname.startsWith(link.href));
+
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`transition-colors duration-200 ${
+                  isActive
+                    ? "font-medium text-white"
+                    : "text-white/50 hover:text-white/80"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
+
+        {/* Mobile menu button */}
+        <button
+          type="button"
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="rounded-md border border-white/20 px-3 py-2 text-sm text-white md:hidden"
+        >
+          {menuOpen ? <FiX size={20} /> : <FiMenu size={20} />}
+        </button>
       </div>
+
+      {/* Mobile nav */}
+      {menuOpen && (
+        <nav className="border-t border-white/10 px-6 py-4 md:hidden">
+          <div className="flex flex-col gap-4 text-sm">
+            {navLinks.map((link) => {
+              const isActive =
+                pathname === link.href ||
+                (link.href !== "/" && pathname.startsWith(link.href));
+
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className={`transition-colors duration-200 ${
+                    isActive
+                      ? "font-medium text-white"
+                      : "text-white/50 hover:text-white/80"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </div>
+        </nav>
+      )}
     </header>
   );
 }
