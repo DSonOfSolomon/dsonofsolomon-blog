@@ -2,7 +2,9 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #111111;
+  --foreground: #111827;
+  --muted: #6b7280;
+  --brand: #0a192f;
 }
 
 html {
@@ -20,6 +22,6 @@ body {
 }
 
 a {
-  text-decoration: none;
   color: inherit;
+  text-decoration: none;
 }
