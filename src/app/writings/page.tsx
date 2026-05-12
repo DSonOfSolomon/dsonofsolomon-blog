@@ -1,8 +1,9 @@
 import Container from "@/components/site/Container";
+import PageWrapper from "@/components/site/PageWrapper";
 
 export default function WritingsPage() {
   return (
-    <main className="min-h-screen py-12">
+    <PageWrapper>
       <Container>
         <h1 className="text-3xl font-bold tracking-tight">
           Writings
@@ -12,6 +13,6 @@ export default function WritingsPage() {
           All writing will appear here.
         </p>
       </Container>
-    </main>
+    </PageWrapper>
   );
 }

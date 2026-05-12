@@ -1,4 +1,5 @@
 import Container from "@/components/site/Container";
+import PageWrapper from "@/components/site/PageWrapper";
 
 type Props = {
   params: Promise<{
@@ -10,7 +11,7 @@ export default async function WritingPage({ params }: Props) {
   const { slug } = await params;
 
   return (
-    <main className="min-h-screen py-12">
+    <PageWrapper>
       <Container>
         <h1 className="text-3xl font-bold tracking-tight">
           {slug}
@@ -20,6 +21,6 @@ export default async function WritingPage({ params }: Props) {
           Individual writing page.
         </p>
       </Container>
-    </main>
+    </PageWrapper>
   );
 }

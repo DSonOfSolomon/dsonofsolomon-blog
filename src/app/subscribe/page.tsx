@@ -1,8 +1,9 @@
 import Container from "@/components/site/Container";
+import PageWrapper from "@/components/site/PageWrapper";
 
 export default function SubscribePage() {
   return (
-    <main className="min-h-screen py-12">
+    <PageWrapper>
       <Container>
         <h1 className="text-3xl font-bold tracking-tight">
           Subscribe
@@ -12,6 +13,6 @@ export default function SubscribePage() {
           Email collection page.
         </p>
       </Container>
-    </main>
+    </PageWrapper>
   );
 }
