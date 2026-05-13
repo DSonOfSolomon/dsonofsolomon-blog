@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CategoryBadge from "@/components/writings/CategoryBadge";
 
 type WritingCardProps = {
   title: string;
@@ -15,9 +16,7 @@ export default function WritingCard({
 }: WritingCardProps) {
   return (
     <article className="rounded-2xl border border-gray-200 p-6 transition-colors hover:border-gray-400">
-      <p className="text-xs font-medium uppercase tracking-[0.2em] text-gray-500">
-        {category}
-      </p>
+    <CategoryBadge label={category} />
 
       <h3 className="mt-4 text-xl font-semibold tracking-tight text-gray-950">
         <Link href={`/writings/${slug}`}>
