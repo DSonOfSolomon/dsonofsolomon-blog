@@ -15,8 +15,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "D•sonofSolomon",
-  description: "Perspective, thoughts, ideas, observations and systems.",
+  title: {
+    default: "DSonOfSolomon",
+    template: "%s | DSonOfSolomon",
+  },
+  description: "Essays, ideas, observations and systems.",
 };
 
 export default function RootLayout({

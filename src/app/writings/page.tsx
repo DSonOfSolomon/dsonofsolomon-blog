@@ -1,6 +1,12 @@
 import Container from "@/components/site/Container";
 import PageWrapper from "@/components/site/PageWrapper";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Writings",
+};
+
 export default function WritingsPage() {
   return (
     <PageWrapper>
