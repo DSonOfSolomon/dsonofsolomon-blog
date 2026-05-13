@@ -20,6 +20,18 @@ export const metadata: Metadata = {
     template: "%s | DSonOfSolomon",
   },
   description: "Essays, ideas, observations and systems.",
+  openGraph: {
+    title: "DSonOfSolomon",
+    description: "Essays, ideas, observations and systems.",
+    url: "https://dsonofsolomon.com",
+    siteName: "DSonOfSolomon",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "DSonOfSolomon",
+    description: "Essays, ideas, observations and systems.",
+  },
 };
 
 export default function RootLayout({
