@@ -20,7 +20,7 @@ export default function SiteHeader() {
     <header className="border-b border-white/10 bg-[#0a192f] text-white">
       <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
         <Link href="/" className="text-base font-semibold tracking-tight">
-          DSonOfSolomon
+          D•sonofSolomon
         </Link>
 
         {/* Desktop nav */}
