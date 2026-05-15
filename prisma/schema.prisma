@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Creator {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  bio       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  posts      Post[]
+  categories Category[]
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  creatorId String
+  creator   Creator @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  posts Post[]
+
+  @@unique([creatorId, slug])
+}
+
+model Post {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String
+  subtitle    String?
+  excerpt     String
+  content     String
+  status      String   @default("draft")
+  coverImage  String?
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  chapterLabel String?
+  chapterNumber Int?
+
+  creatorId String
+  creator   Creator @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@unique([creatorId, slug])
+}
+
