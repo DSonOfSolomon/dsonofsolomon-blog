@@ -2,25 +2,23 @@ import Container from "@/components/site/Container";
 import PageWrapper from "@/components/site/PageWrapper";
 import WritingCard from "@/components/writings/WritingCard";
 import Link from "next/link";
+import { prisma } from "@/lib/prisma";
+import { getPostPreview } from "@/lib/writings";
 
-const featuredWritings = [
-  {
-    title: "The Art of Seeing Clearly",
-    excerpt:
-      "Notes on attention, culture, and learning to notice what most people rush past.",
-    slug: "the-art-of-seeing-clearly",
-    category: "Life",
-  },
-  {
-    title: "Systems Before Motivation",
-    excerpt:
-      "Why repeatable systems beat emotional bursts when building anything meaningful.",
-    slug: "systems-before-motivation",
-    category: "Systems",
-  },
-];
+export default async function HomePage() {
+  const featuredWritings = await prisma.post.findMany({
+    where: {
+      status: "published",
+    },
+    include: {
+      category: true,
+    },
+    orderBy: {
+      publishedAt: "desc",
+    },
+    take: 2,
+  });
 
-export default function HomePage() {
   return (
     <PageWrapper>
       <Container>
@@ -79,9 +77,10 @@ export default function HomePage() {
               <WritingCard
                 key={writing.slug}
                 title={writing.title}
-                excerpt={writing.excerpt}
+                excerpt={getPostPreview(writing.excerpt, writing.content)}
                 slug={writing.slug}
-                category={writing.category}
+                category={writing.category?.name ?? "Writing"}
+                chapterLabel={writing.chapterLabel ?? undefined}
               />
             ))}
           </div>

@@ -28,14 +28,12 @@ async function main() {
     data: {
       title: "The Art of Seeing Clearly",
       slug: "the-art-of-seeing-clearly",
-      subtitle: "Decaying Decades",
       excerpt:
         "Why repeatable systems beat emotional bursts when building anything meaningful.",
       content:
         "Most people are not reacting to reality. They are reacting to stories they have repeated to themselves for years.",
       status: "published",
       chapterLabel: "D•sonofSolomon Chapter I",
-      chapterNumber: 1,
       creatorId: creator.id,
       categoryId: lifeCategory.id,
       publishedAt: new Date(),

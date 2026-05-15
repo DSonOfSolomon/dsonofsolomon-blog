@@ -3,19 +3,28 @@ import Container from "@/components/site/Container";
 import PageWrapper from "@/components/site/PageWrapper";
 import WritingCard from "@/components/writings/WritingCard";
 import EmptyState from "@/components/site/EmptyState";
+import { prisma } from "@/lib/prisma";
+import { getPostPreview } from "@/lib/writings";
 
 export const metadata: Metadata = {
   title: "Writings",
 };
 
-const writings: {
-  title: string;
-  excerpt: string;
-  slug: string;
-  category: string;
-}[] = [];
+export default async function WritingsPage() {
+  const writings = await prisma.post.findMany({
+    where: {
+      status: "published",
+    },
 
-export default function WritingsPage() {
+    include: {
+      category: true,
+    },
+
+    orderBy: {
+      publishedAt: "desc",
+    },
+  });
+
   return (
     <PageWrapper>
       <Container>
@@ -41,9 +50,10 @@ export default function WritingsPage() {
                 <WritingCard
                   key={writing.slug}
                   title={writing.title}
-                  excerpt={writing.excerpt}
+                  excerpt={getPostPreview(writing.excerpt, writing.content)}
                   slug={writing.slug}
-                  category={writing.category}
+                  category={writing.category?.name ?? "Writings"}
+                  chapterLabel={writing.chapterLabel ?? undefined}
                 />
               ))}
             </div>

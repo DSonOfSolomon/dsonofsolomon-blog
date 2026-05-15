@@ -4,7 +4,7 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
@@ -43,7 +43,6 @@ model Post {
   id          String   @id @default(cuid())
   title       String
   slug        String
-  subtitle    String?
   excerpt     String
   content     String
   status      String   @default("draft")
@@ -53,7 +52,6 @@ model Post {
   updatedAt   DateTime @updatedAt
 
   chapterLabel String?
-  chapterNumber Int?
 
   creatorId String
   creator   Creator @relation(fields: [creatorId], references: [id], onDelete: Cascade)
@@ -63,4 +61,3 @@ model Post {
 
   @@unique([creatorId, slug])
 }
-
