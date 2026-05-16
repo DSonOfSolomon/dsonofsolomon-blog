@@ -1,0 +1,1 @@
+ALTER TABLE "Post" ADD COLUMN "universe" TEXT NOT NULL DEFAULT 'public';

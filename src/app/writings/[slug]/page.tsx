@@ -19,6 +19,7 @@ export default async function WritingPage({ params }: Props) {
     where: {
       slug,
       status: "published",
+      universe: "public",
     },
     include: {
       category: true,
@@ -44,6 +45,7 @@ export default async function WritingPage({ params }: Props) {
   const relatedWritings = await prisma.post.findMany({
     where: {
       status: "published",
+      universe: "public",
       slug: {
         not: post.slug,
       },

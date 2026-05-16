@@ -1,0 +1,165 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { updatePost } from "@/app/admin/actions";
+import { prisma } from "@/lib/prisma";
+import { ensureDefaultCategories } from "@/lib/admin";
+
+type Props = {
+  params: Promise<{
+    id: string;
+  }>;
+};
+
+export default async function EditPostPage({ params }: Props) {
+  const { id } = await params;
+
+  const [post, categories] = await Promise.all([
+    prisma.post.findUnique({ where: { id } }),
+    ensureDefaultCategories(),
+  ]);
+
+  if (!post) {
+    notFound();
+  }
+
+  return (
+    <section className="rounded-3xl border border-gray-200 bg-white p-6">
+      <div className="flex items-center justify-between gap-4">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-gray-500">
+            Posts
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-gray-950">
+            Edit post
+          </h2>
+        </div>
+
+        <Link href="/admin/posts" className="text-sm text-gray-600 hover:text-gray-950">
+          Back to posts
+        </Link>
+      </div>
+
+      <form action={updatePost} className="mt-8 space-y-6">
+        <input type="hidden" name="id" value={post.id} />
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <label className="block">
+            <span className="text-sm font-medium text-gray-900">Title</span>
+            <input
+              name="title"
+              required
+              defaultValue={post.title}
+              className="mt-2 w-full rounded-2xl border border-gray-300 px-4 py-3 outline-none transition-colors focus:border-[#0a192f]"
+            />
+          </label>
+
+          <label className="block">
+            <span className="text-sm font-medium text-gray-900">Slug</span>
+            <input
+              name="slug"
+              defaultValue={post.slug}
+              className="mt-2 w-full rounded-2xl border border-gray-300 px-4 py-3 outline-none transition-colors focus:border-[#0a192f]"
+            />
+          </label>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <label className="block">
+            <span className="text-sm font-medium text-gray-900">Chapter label</span>
+            <input
+              name="chapterLabel"
+              defaultValue={post.chapterLabel ?? ""}
+              className="mt-2 w-full rounded-2xl border border-gray-300 px-4 py-3 outline-none transition-colors focus:border-[#0a192f]"
+            />
+          </label>
+          <div className="rounded-2xl border border-dashed border-gray-300 px-4 py-3 text-sm text-gray-600">
+            Current status:
+            <span className="ml-2 font-medium capitalize text-gray-900">
+              {post.status}
+            </span>
+          </div>
+        </div>
+
+        <label className="block">
+          <span className="text-sm font-medium text-gray-900">Universe</span>
+          <select
+            name="universe"
+            defaultValue={post.universe}
+            className="mt-2 w-full rounded-2xl border border-gray-300 bg-white px-4 py-3 outline-none transition-colors focus:border-[#0a192f]"
+          >
+            <option value="public">Writings</option>
+            <option value="unfiltered">Unfiltered</option>
+          </select>
+        </label>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <label className="block">
+            <span className="text-sm font-medium text-gray-900">Category</span>
+            <select
+              name="categoryId"
+              defaultValue={post.categoryId ?? ""}
+              className="mt-2 w-full rounded-2xl border border-gray-300 bg-white px-4 py-3 outline-none transition-colors focus:border-[#0a192f]"
+            >
+              <option value="">Unassigned</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="block">
+            <span className="text-sm font-medium text-gray-900">Cover image URL</span>
+            <input
+              name="coverImage"
+              defaultValue={post.coverImage ?? ""}
+              className="mt-2 w-full rounded-2xl border border-gray-300 px-4 py-3 outline-none transition-colors focus:border-[#0a192f]"
+            />
+          </label>
+        </div>
+
+        <label className="block">
+          <span className="text-sm font-medium text-gray-900">Excerpt</span>
+          <textarea
+            name="excerpt"
+            required
+            rows={3}
+            defaultValue={post.excerpt}
+            className="mt-2 w-full rounded-2xl border border-gray-300 px-4 py-3 outline-none transition-colors focus:border-[#0a192f]"
+          />
+        </label>
+
+        <label className="block">
+          <span className="text-sm font-medium text-gray-900">Content</span>
+          <textarea
+            name="content"
+            required
+            rows={14}
+            defaultValue={post.content}
+            className="mt-2 w-full rounded-3xl border border-gray-300 px-4 py-3 outline-none transition-colors focus:border-[#0a192f]"
+          />
+        </label>
+
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+          <button
+            type="submit"
+            name="status"
+            value="draft"
+            className="inline-flex justify-center rounded-full border border-gray-300 px-6 py-3 text-sm font-medium text-gray-900 transition-colors hover:border-gray-900"
+          >
+            Save draft
+          </button>
+          <button
+            type="submit"
+            name="status"
+            value="published"
+            className="inline-flex justify-center rounded-full bg-[#0a192f] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#13294b]"
+          >
+            Publish post
+          </button>
+        </div>
+      </form>
+    </section>
+  );
+}

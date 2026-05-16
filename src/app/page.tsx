@@ -10,6 +10,7 @@ export default async function HomePage() {
   const featuredWritings = await prisma.post.findMany({
     where: {
       status: "published",
+      universe: "public",
     },
     include: {
       category: true,

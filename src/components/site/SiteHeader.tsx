@@ -5,21 +5,32 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
 
-const navLinks = [
+const publicNavLinks = [
   { label: "Home", href: "/" },
   { label: "Writings", href: "/writings" },
   { label: "About", href: "/about" },
   { label: "Subscribe", href: "/subscribe" },
 ];
 
+const adminNavLinks = [
+  { label: "Overview", href: "/admin" },
+  { label: "Posts", href: "/admin/posts" },
+  { label: "Categories", href: "/admin/categories" },
+  { label: "Subscribers", href: "/admin/subscribers" },
+  { label: "Logout", href: "/admin/logout" },
+];
+
 export default function SiteHeader() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const isAdminRoute = pathname.startsWith("/admin");
+  const navLinks = isAdminRoute ? adminNavLinks : publicNavLinks;
+  const brandHref = isAdminRoute ? "/admin" : "/";
 
   return (
     <header className="border-b border-white/10 bg-[#0a192f] text-white">
       <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
-        <Link href="/" className="text-base font-semibold tracking-tight">
+        <Link href={brandHref} className="text-base font-semibold tracking-tight">
           D•sonofSolomon
         </Link>
 

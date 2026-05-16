@@ -2,7 +2,7 @@ import "dotenv/config";
 
 import { PrismaPg } from "@prisma/adapter-pg";
 
-import { PrismaClient } from "../src/generated/prisma/client";
+import { PrismaClient } from "../src/generated/prisma";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
 const prisma = new PrismaClient({ adapter });
@@ -33,6 +33,7 @@ async function main() {
       content:
         "Most people are not reacting to reality. They are reacting to stories they have repeated to themselves for years.",
       status: "published",
+      universe: "public",
       chapterLabel: "D•sonofSolomon Chapter I",
       creatorId: creator.id,
       categoryId: lifeCategory.id,

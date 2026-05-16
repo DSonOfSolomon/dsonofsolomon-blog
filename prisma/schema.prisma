@@ -22,6 +22,7 @@ model Creator {
 
   posts      Post[]
   categories Category[]
+  subscribers Subscriber[]
 }
 
 model Category {
@@ -46,6 +47,7 @@ model Post {
   excerpt     String
   content     String
   status      String   @default("draft")
+  universe    String   @default("public")
   coverImage  String?
   publishedAt DateTime?
   createdAt   DateTime @default(now())
@@ -60,4 +62,17 @@ model Post {
   category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
 
   @@unique([creatorId, slug])
+}
+
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  creatorId String
+  creator   Creator @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@unique([creatorId, email])
 }

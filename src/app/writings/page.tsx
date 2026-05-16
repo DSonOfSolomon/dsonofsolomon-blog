@@ -14,6 +14,7 @@ export default async function WritingsPage() {
   const writings = await prisma.post.findMany({
     where: {
       status: "published",
+      universe: "public",
     },
 
     include: {
@@ -45,7 +46,7 @@ export default async function WritingsPage() {
 
         <section className="mt-12">
           {writings.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-6">
               {writings.map((writing) => (
                 <WritingCard
                   key={writing.slug}
