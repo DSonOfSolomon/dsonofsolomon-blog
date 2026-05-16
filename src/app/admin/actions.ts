@@ -24,8 +24,11 @@ async function refreshAdminViews() {
   revalidatePath("/admin/posts");
   revalidatePath("/admin/categories");
   revalidatePath("/admin/subscribers");
+  revalidatePath("/admin/letter-requests");
   revalidatePath("/");
   revalidatePath("/writings");
+  revalidatePath("/unfiltered");
+  revalidatePath("/request-a-letter");
 }
 
 export async function createPost(formData: FormData) {
@@ -183,6 +186,54 @@ export async function deleteSubscriber(formData: FormData) {
   const id = normalizeRequired(formData.get("id"));
 
   await prisma.subscriber.delete({
+    where: { id },
+  });
+
+  await refreshAdminViews();
+}
+
+export async function createLetterRequest(formData: FormData) {
+  const creator = await getPrimaryCreator();
+  const name = normalizeRequired(formData.get("name"));
+  const email = normalizeRequired(formData.get("email")).toLowerCase();
+  const tier = normalizeRequired(formData.get("tier"));
+  const message = normalizeRequired(formData.get("message"));
+
+  if (!name || !email || !message || !tier) {
+    throw new Error("Name, email, tier, and message are required.");
+  }
+
+  await prisma.letterRequest.create({
+    data: {
+      name,
+      email,
+      tier,
+      message,
+      creatorId: creator.id,
+    },
+  });
+
+  revalidatePath("/request-a-letter");
+  revalidatePath("/admin/letter-requests");
+  redirect("/request-a-letter?success=1");
+}
+
+export async function updateLetterRequestStatus(formData: FormData) {
+  const id = normalizeRequired(formData.get("id"));
+  const status = normalizeRequired(formData.get("status"));
+
+  await prisma.letterRequest.update({
+    where: { id },
+    data: { status },
+  });
+
+  await refreshAdminViews();
+}
+
+export async function deleteLetterRequest(formData: FormData) {
+  const id = normalizeRequired(formData.get("id"));
+
+  await prisma.letterRequest.delete({
     where: { id },
   });
 

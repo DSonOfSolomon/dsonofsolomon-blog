@@ -27,7 +27,7 @@ function StatCard({
 export default async function AdminDashboardPage() {
   await ensureDefaultCategories();
 
-  const [postCount, publishedCount, draftCount, publicCount, unfilteredCount, categoryCount, subscriberCount, recentPosts] =
+  const [postCount, publishedCount, draftCount, publicCount, unfilteredCount, categoryCount, subscriberCount, letterRequestCount, recentPosts] =
     await Promise.all([
       prisma.post.count(),
       prisma.post.count({ where: { status: "published" } }),
@@ -36,6 +36,7 @@ export default async function AdminDashboardPage() {
       prisma.post.count({ where: { status: "published", universe: "unfiltered" } }),
       prisma.category.count(),
       prisma.subscriber.count(),
+      prisma.letterRequest.count(),
       prisma.post.findMany({
         orderBy: { updatedAt: "desc" },
         take: 5,
@@ -53,9 +54,10 @@ export default async function AdminDashboardPage() {
         <StatCard label="Unfiltered" value={unfilteredCount} note="Published to the premium universe" />
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-2">
+      <section className="grid gap-4 sm:grid-cols-3">
         <StatCard label="Categories" value={categoryCount} note="Controlled writing taxonomy" />
         <StatCard label="Subscribers" value={subscriberCount} note="Stored email audience" />
+        <StatCard label="Letters" value={letterRequestCount} note="Personal letter requests received" />
       </section>
 
       <section className="rounded-3xl border border-gray-200 bg-white p-6">

@@ -23,6 +23,7 @@ model Creator {
   posts      Post[]
   categories Category[]
   subscribers Subscriber[]
+  letterRequests LetterRequest[]
 }
 
 model Category {
@@ -76,4 +77,21 @@ model Subscriber {
   creator   Creator @relation(fields: [creatorId], references: [id], onDelete: Cascade)
 
   @@unique([creatorId, email])
+}
+
+model LetterRequest {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  tier        String
+  message     String
+  status      String   @default("pending")
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  creatorId   String
+  creator     Creator @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@index([creatorId, createdAt])
 }

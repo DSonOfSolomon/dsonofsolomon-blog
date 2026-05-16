@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { createLetterRequest } from "@/app/admin/actions";
 import Container from "@/components/site/Container";
 import PageWrapper from "@/components/site/PageWrapper";
 import PremiumGate from "@/components/premium/PremiumGate";
@@ -8,7 +9,12 @@ export const metadata: Metadata = {
   title: "Request a Letter",
 };
 
-export default async function RequestALetterPage() {
+export default async function RequestALetterPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ success?: string }>;
+}) {
+  const { success } = await searchParams;
   const premium = await isPremiumSubscriber();
 
   if (!premium) {
@@ -24,6 +30,19 @@ export default async function RequestALetterPage() {
       </PageWrapper>
     );
   }
+
+  const tiers = [
+    {
+      value: "typed",
+      title: "Typed letter",
+      body: "A reflective response, carefully written and delivered in a clean digital format.",
+    },
+    {
+      value: "handwritten",
+      title: "Handwritten letter",
+      body: "A slower, more tactile version intended for more intimate or ceremonial requests.",
+    },
+  ];
 
   return (
     <PageWrapper>
@@ -50,48 +69,56 @@ export default async function RequestALetterPage() {
                 Letter tiers
               </h2>
               <div className="mt-5 space-y-5 text-sm leading-7 text-gray-600">
-                <div>
-                  <p className="font-medium text-gray-950">Typed letter</p>
-                  <p>
-                    A reflective response, carefully written and delivered in a
-                    clean digital format.
-                  </p>
-                </div>
-                <div>
-                  <p className="font-medium text-gray-950">Handwritten letter</p>
-                  <p>
-                    A slower, more tactile version intended for more intimate
-                    or ceremonial requests.
-                  </p>
-                </div>
+                {tiers.map((tier) => (
+                  <div key={tier.value}>
+                    <p className="font-medium text-gray-950">{tier.title}</p>
+                    <p>{tier.body}</p>
+                  </div>
+                ))}
               </div>
             </div>
 
-            <form className="space-y-4">
+            <form action={createLetterRequest} className="space-y-4">
               <input
+                name="name"
+                required
                 placeholder="Your name"
                 className="w-full rounded-2xl border border-gray-300 px-4 py-3 outline-none transition-colors focus:border-[#0a192f]"
               />
               <input
+                name="email"
                 type="email"
+                required
                 placeholder="Your email"
                 className="w-full rounded-2xl border border-gray-300 px-4 py-3 outline-none transition-colors focus:border-[#0a192f]"
               />
-              <select className="w-full rounded-2xl border border-gray-300 bg-white px-4 py-3 outline-none transition-colors focus:border-[#0a192f]">
-                <option>Typed letter</option>
-                <option>Handwritten letter</option>
+              <select
+                name="tier"
+                className="w-full rounded-2xl border border-gray-300 bg-white px-4 py-3 outline-none transition-colors focus:border-[#0a192f]"
+              >
+                {tiers.map((tier) => (
+                  <option key={tier.value} value={tier.value}>
+                    {tier.title}
+                  </option>
+                ))}
               </select>
               <textarea
+                name="message"
+                required
                 rows={8}
                 placeholder="What would you like the letter to be about?"
                 className="w-full rounded-3xl border border-gray-300 px-4 py-3 outline-none transition-colors focus:border-[#0a192f]"
               />
               <button
-                type="button"
+                type="submit"
                 className="inline-flex rounded-full bg-[#0a192f] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#13294b]"
               >
-                Request flow coming next
+                Submit request
               </button>
+
+              {success === "1" && (
+                <p className="text-sm text-green-700">Letter request submitted.</p>
+              )}
             </form>
           </div>
         </section>

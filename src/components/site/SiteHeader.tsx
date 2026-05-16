@@ -15,6 +15,7 @@ const publicNavLinks = [
 const adminNavLinks = [
   { label: "Overview", href: "/admin" },
   { label: "Posts", href: "/admin/posts" },
+  { label: "Letter Requests", href: "/admin/letter-requests" },
   { label: "Categories", href: "/admin/categories" },
   { label: "Subscribers", href: "/admin/subscribers" },
   { label: "Logout", href: "/admin/logout" },
