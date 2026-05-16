@@ -27,10 +27,10 @@ export default function SiteFooter() {
 
           <div className="flex flex-col gap-4 md:items-end">
             <Link
-              href="/subscribe"
+              href="/follow"
               className="inline-flex items-center rounded-full bg-[#0a192f] px-5 py-2.5 text-sm font-medium !text-white transition-colors hover:bg-[#13294b]"
             >
-              Subscribe
+              Follow
             </Link>
 
             <div className="flex items-center gap-3 text-gray-500">

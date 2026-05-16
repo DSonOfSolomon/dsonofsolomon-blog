@@ -3,7 +3,9 @@ import { createLetterRequest } from "@/app/admin/actions";
 import Container from "@/components/site/Container";
 import PageWrapper from "@/components/site/PageWrapper";
 import PremiumGate from "@/components/premium/PremiumGate";
+import { siteFeatures } from "@/lib/features";
 import { isPremiumSubscriber } from "@/lib/premium";
+import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Request a Letter",
@@ -14,6 +16,10 @@ export default async function RequestALetterPage({
 }: {
   searchParams: Promise<{ success?: string }>;
 }) {
+  if (!siteFeatures.letterRequestsEnabled) {
+    notFound();
+  }
+
   const { success } = await searchParams;
   const premium = await isPremiumSubscriber();
 

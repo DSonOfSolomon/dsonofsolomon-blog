@@ -3,16 +3,22 @@ import Container from "@/components/site/Container";
 import EmptyState from "@/components/site/EmptyState";
 import PageWrapper from "@/components/site/PageWrapper";
 import PremiumGate from "@/components/premium/PremiumGate";
+import { siteFeatures } from "@/lib/features";
 import WritingCard from "@/components/writings/WritingCard";
 import { prisma } from "@/lib/prisma";
 import { isPremiumSubscriber } from "@/lib/premium";
 import { getPostPreview } from "@/lib/writings";
+import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "D•sonofSolomon Unfiltered",
 };
 
 export default async function UnfilteredPage() {
+  if (!siteFeatures.unfilteredEnabled) {
+    notFound();
+  }
+
   const premium = await isPremiumSubscriber();
 
   if (!premium) {

@@ -26,6 +26,8 @@ async function refreshAdminViews() {
   revalidatePath("/admin/subscribers");
   revalidatePath("/admin/letter-requests");
   revalidatePath("/");
+  revalidatePath("/follow");
+  revalidatePath("/subscribe");
   revalidatePath("/writings");
   revalidatePath("/unfiltered");
   revalidatePath("/request-a-letter");
@@ -284,6 +286,45 @@ export async function subscribeToLetters(formData: FormData) {
   }
 
   redirect(`/subscribe?success=1${tier === "premium" ? "&plan=premium" : ""}`);
+}
+
+export async function followWriter(formData: FormData) {
+  const creator = await getPrimaryCreator();
+  const email = normalizeRequired(formData.get("email")).toLowerCase();
+  const name = normalizeOptional(formData.get("name"));
+
+  if (!email) {
+    throw new Error("Email is required.");
+  }
+
+  await prisma.subscriber.upsert({
+    where: {
+      creatorId_email: {
+        creatorId: creator.id,
+        email,
+      },
+    },
+    update: {
+      name,
+      tier: "free",
+    },
+    create: {
+      email,
+      name,
+      tier: "free",
+      creatorId: creator.id,
+    },
+  });
+
+  const cookieStore = await cookies();
+  cookieStore.set("subscriber_email", email, {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+  });
+
+  await refreshAdminViews();
+  redirect("/follow?success=1");
 }
 
 export async function suggestSlug(formData: FormData) {

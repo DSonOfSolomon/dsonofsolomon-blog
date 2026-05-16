@@ -27,7 +27,7 @@ function StatCard({
 export default async function AdminDashboardPage() {
   await ensureDefaultCategories();
 
-  const [postCount, publishedCount, draftCount, publicCount, unfilteredCount, categoryCount, subscriberCount, letterRequestCount, recentPosts] =
+  const [postCount, publishedCount, draftCount, publicCount, unfilteredCount, categoryCount, followerCount, premiumCount, letterRequestCount, recentPosts] =
     await Promise.all([
       prisma.post.count(),
       prisma.post.count({ where: { status: "published" } }),
@@ -35,7 +35,8 @@ export default async function AdminDashboardPage() {
       prisma.post.count({ where: { status: "published", universe: "public" } }),
       prisma.post.count({ where: { status: "published", universe: "unfiltered" } }),
       prisma.category.count(),
-      prisma.subscriber.count(),
+      prisma.subscriber.count({ where: { tier: "free" } }),
+      prisma.subscriber.count({ where: { tier: "premium" } }),
       prisma.letterRequest.count(),
       prisma.post.findMany({
         orderBy: { updatedAt: "desc" },
@@ -56,8 +57,13 @@ export default async function AdminDashboardPage() {
 
       <section className="grid gap-4 sm:grid-cols-3">
         <StatCard label="Categories" value={categoryCount} note="Controlled writing taxonomy" />
-        <StatCard label="Subscribers" value={subscriberCount} note="Stored email audience" />
-        <StatCard label="Letters" value={letterRequestCount} note="Personal letter requests received" />
+        <StatCard label="Followers" value={followerCount} note="Public readers following the writings" />
+        <StatCard label="Premium" value={premiumCount} note="Reserved for the later premium layer" />
+      </section>
+
+      <section className="grid gap-4 sm:grid-cols-2">
+        <StatCard label="Letters" value={letterRequestCount} note="Dormant premium request queue" />
+        <StatCard label="Audience" value={followerCount + premiumCount} note="Total stored email audience" />
       </section>
 
       <section className="rounded-3xl border border-gray-200 bg-white p-6">

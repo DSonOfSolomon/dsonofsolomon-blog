@@ -4,12 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
+import { siteFeatures } from "@/lib/features";
 
 const publicNavLinks = [
   { label: "Home", href: "/" },
   { label: "Writings", href: "/writings" },
   { label: "About", href: "/about" },
-  { label: "Subscribe", href: "/subscribe" },
+  ...(siteFeatures.followEnabled ? [{ label: "Follow", href: "/follow" }] : []),
 ];
 
 const adminNavLinks = [

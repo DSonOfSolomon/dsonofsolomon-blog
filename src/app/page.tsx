@@ -3,23 +3,31 @@ import SiteFooter from "@/components/site/SiteFooter";
 import PageWrapper from "@/components/site/PageWrapper";
 import WritingCard from "@/components/writings/WritingCard";
 import Link from "next/link";
+import { siteFeatures } from "@/lib/features";
 import { prisma } from "@/lib/prisma";
 import { getPostPreview } from "@/lib/writings";
 
 export default async function HomePage() {
-  const featuredWritings = await prisma.post.findMany({
-    where: {
-      status: "published",
-      universe: "public",
-    },
-    include: {
-      category: true,
-    },
-    orderBy: {
-      publishedAt: "desc",
-    },
-    take: 2,
-  });
+  const [featuredWritings, followerCount] = await Promise.all([
+    prisma.post.findMany({
+      where: {
+        status: "published",
+        universe: "public",
+      },
+      include: {
+        category: true,
+      },
+      orderBy: {
+        publishedAt: "desc",
+      },
+      take: 2,
+    }),
+    prisma.subscriber.count({
+      where: {
+        tier: "free",
+      },
+    }),
+  ]);
 
   return (
     <PageWrapper>
@@ -40,18 +48,22 @@ export default async function HomePage() {
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
-                href="/unfiltered"
-                className="inline-flex justify-center rounded-full bg-[#0a192f] px-6 py-3 text-sm font-medium !text-white no-underline transition-colors hover:bg-[#13294b]"
+                href="/writings"
+                className="inline-flex h-[2.5rem] items-center justify-center rounded-full bg-[#0a192f] px-5 text-sm font-medium !text-white no-underline transition-colors hover:bg-[#13294b]"
               >
-                D•sonofSolomon Unfiltered
+                Read writings
               </Link>
 
-              <Link
-                href="/request-a-letter"
-                className="inline-flex justify-center rounded-full border border-gray-300 px-6 py-3 text-sm font-medium text-gray-900 transition-colors hover:border-gray-900"
-              >
-                Request a letter
-              </Link>
+              {siteFeatures.followEnabled && (
+                <div className="inline-flex h-[2.5rem] min-w-[8.5rem] items-center justify-center gap-2.5 rounded-full border border-gray-300 px-4">
+                  <span className="text-lg font-medium tracking-tight text-gray-950">
+                    {followerCount}
+                  </span>
+                  <span className="text-sm font-medium text-gray-600">
+                    Followers
+                  </span>
+                </div>
+              )}
             </div>
           </section>
 

@@ -1,6 +1,8 @@
 import Container from "@/components/site/Container";
 import PageWrapper from "@/components/site/PageWrapper";
 import { subscribeToLetters } from "@/app/admin/actions";
+import { isPremiumExperienceEnabled } from "@/lib/features";
+import { notFound } from "next/navigation";
 
 import type { Metadata } from "next";
 
@@ -15,6 +17,11 @@ export default async function SubscribePage({
 }) {
   const { success, plan, next } = await searchParams;
   const selectedPlan = plan === "premium" ? "premium" : "free";
+  const premiumEnabled = isPremiumExperienceEnabled();
+
+  if (!premiumEnabled || selectedPlan !== "premium") {
+    notFound();
+  }
 
   return (
     <PageWrapper>

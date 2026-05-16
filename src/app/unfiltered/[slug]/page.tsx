@@ -5,6 +5,7 @@ import PageWrapper from "@/components/site/PageWrapper";
 import PremiumGate from "@/components/premium/PremiumGate";
 import WritingCard from "@/components/writings/WritingCard";
 import CategoryBadge from "@/components/writings/CategoryBadge";
+import { siteFeatures } from "@/lib/features";
 import { prisma } from "@/lib/prisma";
 import { isPremiumSubscriber } from "@/lib/premium";
 import { getPostPreview } from "@/lib/writings";
@@ -16,6 +17,10 @@ type Props = {
 };
 
 export default async function UnfilteredWritingPage({ params }: Props) {
+  if (!siteFeatures.unfilteredEnabled) {
+    notFound();
+  }
+
   const premium = await isPremiumSubscriber();
 
   if (!premium) {
