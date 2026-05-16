@@ -7,6 +7,7 @@ type WritingCardProps = {
   slug: string;
   category: string;
   chapterLabel?: string;
+  basePath?: string;
 };
 
 export default function WritingCard({
@@ -14,11 +15,12 @@ export default function WritingCard({
   excerpt,
   slug,
   category,
-  chapterLabel
+  chapterLabel,
+  basePath = "/writings",
 }: WritingCardProps) {
   return (
     <Link
-      href={`/writings/${slug}`}
+      href={`${basePath}/${slug}`}
       className="block rounded-2xl border border-gray-200 p-6 transition-colors hover:border-gray-400"
     >
       <article>

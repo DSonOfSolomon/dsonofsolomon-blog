@@ -40,17 +40,17 @@ export default async function HomePage() {
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
-                href="/writings"
+                href="/unfiltered"
                 className="inline-flex justify-center rounded-full bg-[#0a192f] px-6 py-3 text-sm font-medium !text-white no-underline transition-colors hover:bg-[#13294b]"
               >
-                Read writings
+                D•sonofSolomon Unfiltered
               </Link>
 
               <Link
-                href="/subscribe"
+                href="/request-a-letter"
                 className="inline-flex justify-center rounded-full border border-gray-300 px-6 py-3 text-sm font-medium text-gray-900 transition-colors hover:border-gray-900"
               >
-                Subscribe
+                Request a letter
               </Link>
             </div>
           </section>

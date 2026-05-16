@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import {
@@ -150,6 +151,7 @@ export async function createSubscriber(formData: FormData) {
   const creator = await getPrimaryCreator();
   const email = normalizeRequired(formData.get("email")).toLowerCase();
   const name = normalizeOptional(formData.get("name"));
+  const tier = normalizeRequired(formData.get("tier")) || "free";
 
   if (!email) {
     throw new Error("Email is required.");
@@ -164,10 +166,12 @@ export async function createSubscriber(formData: FormData) {
     },
     update: {
       name,
+      tier,
     },
     create: {
       email,
       name,
+      tier,
       creatorId: creator.id,
     },
   });
@@ -189,6 +193,8 @@ export async function subscribeToLetters(formData: FormData) {
   const creator = await getPrimaryCreator();
   const email = normalizeRequired(formData.get("email")).toLowerCase();
   const name = normalizeOptional(formData.get("name"));
+  const tier = normalizeRequired(formData.get("tier")) || "free";
+  const nextPath = normalizeOptional(formData.get("nextPath"));
 
   if (!email) {
     throw new Error("Email is required.");
@@ -203,17 +209,30 @@ export async function subscribeToLetters(formData: FormData) {
     },
     update: {
       name,
+      tier,
     },
     create: {
       email,
       name,
+      tier,
       creatorId: creator.id,
     },
   });
 
+  const cookieStore = await cookies();
+  cookieStore.set("subscriber_email", email, {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+  });
+
   revalidatePath("/subscribe");
   revalidatePath("/");
-  redirect("/subscribe?success=1");
+  if (tier === "premium" && nextPath) {
+    redirect(nextPath);
+  }
+
+  redirect(`/subscribe?success=1${tier === "premium" ? "&plan=premium" : ""}`);
 }
 
 export async function suggestSlug(formData: FormData) {

@@ -11,26 +11,31 @@ export const metadata: Metadata = {
 export default async function SubscribePage({
   searchParams,
 }: {
-  searchParams: Promise<{ success?: string }>;
+  searchParams: Promise<{ success?: string; plan?: string; next?: string }>;
 }) {
-  const { success } = await searchParams;
+  const { success, plan, next } = await searchParams;
+  const selectedPlan = plan === "premium" ? "premium" : "free";
 
   return (
     <PageWrapper>
       <Container>
         <h1 className="text-3xl font-bold tracking-tight">
-          Subscribe
+          {selectedPlan === "premium" ? "Unlock premium" : "Subscribe"}
         </h1>
 
         <p className="mt-4 max-w-2xl leading-8 text-gray-700">
-          Join the subscriber list for future updates, letters, and new writing
-          announcements.
+          {selectedPlan === "premium"
+            ? "Upgrade into the premium layer to access D•sonofSolomon Unfiltered and request a personal letter."
+            : "Join the subscriber list for future updates, letters, and new writing announcements."}
         </p>
 
         <form
           action={subscribeToLetters}
           className="mt-8 max-w-2xl space-y-4 rounded-3xl border border-gray-200 bg-white p-6"
         >
+          <input type="hidden" name="tier" value={selectedPlan} />
+          <input type="hidden" name="nextPath" value={next ?? ""} />
+
           <div className="grid gap-4 md:grid-cols-2">
             <input
               name="name"
@@ -50,12 +55,14 @@ export default async function SubscribePage({
             type="submit"
             className="inline-flex rounded-full bg-[#0a192f] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#13294b]"
           >
-            Subscribe
+            {selectedPlan === "premium" ? "Subscribe to premium" : "Subscribe"}
           </button>
 
           {success === "1" && (
             <p className="text-sm text-green-700">
-              Subscription saved.
+              {selectedPlan === "premium"
+                ? "Premium subscription saved."
+                : "Subscription saved."}
             </p>
           )}
         </form>
