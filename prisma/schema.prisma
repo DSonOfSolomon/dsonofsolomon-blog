@@ -13,16 +13,20 @@ datasource db {
 }
 
 model Creator {
-  id        String   @id @default(cuid())
-  name      String
-  slug      String   @unique
-  bio       String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(cuid())
+  name         String
+  slug         String   @unique
+  bio          String?
+  heroImage    String?
+  heroImageAlt String?
+  currentWorkingOn String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  posts      Post[]
-  categories Category[]
-  subscribers Subscriber[]
+  posts          Post[]
+  categories     Category[]
+  subscribers    Subscriber[]
+  followers      Follower[]
   letterRequests LetterRequest[]
 }
 
@@ -92,6 +96,23 @@ model LetterRequest {
 
   creatorId   String
   creator     Creator @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@index([creatorId, createdAt])
+}
+
+model Follower {
+  id             String   @id @default(cuid())
+  endpoint       String   @unique
+  p256dh         String
+  auth           String
+  status         String   @default("active")
+  userAgent      String?
+  lastNotifiedAt DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  creatorId String
+  creator   Creator @relation(fields: [creatorId], references: [id], onDelete: Cascade)
 
   @@index([creatorId, createdAt])
 }

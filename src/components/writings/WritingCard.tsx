@@ -36,7 +36,7 @@ export default function WritingCard({
           {title}
         </h3>
 
-        <p className="mt-3 text-sm leading-7 text-gray-600">
+        <p className="mt-3 overflow-hidden text-sm leading-7 text-gray-600 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:4]">
           {excerpt}
           <span className="text-gray-400">...more</span>
         </p>

@@ -9,16 +9,15 @@ import { siteFeatures } from "@/lib/features";
 const publicNavLinks = [
   { label: "Home", href: "/" },
   { label: "Writings", href: "/writings" },
-  { label: "About", href: "/about" },
   ...(siteFeatures.followEnabled ? [{ label: "Follow", href: "/follow" }] : []),
+  { label: "About", href: "/about" },
 ];
 
 const adminNavLinks = [
   { label: "Overview", href: "/admin" },
   { label: "Posts", href: "/admin/posts" },
   { label: "Letter Requests", href: "/admin/letter-requests" },
-  { label: "Categories", href: "/admin/categories" },
-  { label: "Subscribers", href: "/admin/subscribers" },
+  { label: "Followers", href: "/admin/subscribers" },
   { label: "Logout", href: "/admin/logout" },
 ];
 
@@ -31,7 +30,7 @@ export default function SiteHeader() {
 
   return (
     <header className="border-b border-white/10 bg-[#0a192f] text-white">
-      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
+      <div className="mx-auto flex h-16 w-full max-w-[96rem] items-center justify-between px-6 lg:px-10 2xl:px-14">
         <Link href={brandHref} className="text-base font-semibold tracking-tight">
           D•sonofSolomon
         </Link>

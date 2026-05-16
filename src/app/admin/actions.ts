@@ -327,6 +327,25 @@ export async function followWriter(formData: FormData) {
   redirect("/follow?success=1");
 }
 
+export async function updateCreatorBranding(formData: FormData) {
+  const creator = await getPrimaryCreator();
+  const heroImage = normalizeOptional(formData.get("heroImage"));
+  const heroImageAlt = normalizeOptional(formData.get("heroImageAlt"));
+  const currentWorkingOn = normalizeOptional(formData.get("currentWorkingOn"));
+
+  await prisma.creator.update({
+    where: { id: creator.id },
+    data: {
+      heroImage,
+      heroImageAlt,
+      currentWorkingOn,
+    },
+  });
+
+  await refreshAdminViews();
+  redirect("/admin");
+}
+
 export async function suggestSlug(formData: FormData) {
   return fallbackSlug(normalizeRequired(formData.get("title")));
 }

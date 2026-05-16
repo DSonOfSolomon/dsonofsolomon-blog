@@ -1,28 +1,34 @@
 import Link from "next/link";
 import { createPost } from "@/app/admin/actions";
+import BackToDashboardLink from "@/components/admin/BackToDashboardLink";
 import { ensureDefaultCategories } from "@/lib/admin";
 
 export default async function NewPostPage() {
   const categories = await ensureDefaultCategories();
 
   return (
-    <section className="rounded-3xl border border-gray-200 bg-white p-6">
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-gray-500">
-            Posts
-          </p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-gray-950">
-            Create new post
-          </h2>
-        </div>
-
-        <Link href="/admin/posts" className="text-sm text-gray-600 hover:text-gray-950">
-          Back to posts
-        </Link>
+    <div className="space-y-4">
+      <div className="mb-6">
+        <BackToDashboardLink />
       </div>
 
-      <form action={createPost} className="mt-8 space-y-6">
+      <section className="rounded-3xl border border-gray-200 bg-white p-6">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-gray-500">
+              Posts
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-gray-950">
+              Create new post
+            </h2>
+          </div>
+
+          <Link href="/admin/posts" className="text-sm text-gray-600 hover:text-gray-950">
+            View posts
+          </Link>
+        </div>
+
+        <form action={createPost} className="mt-8 space-y-6">
         <div className="grid gap-6 md:grid-cols-2">
           <label className="block">
             <span className="text-sm font-medium text-gray-900">Title</span>
@@ -134,7 +140,8 @@ export default async function NewPostPage() {
             Publish post
           </button>
         </div>
-      </form>
-    </section>
+        </form>
+      </section>
+    </div>
   );
 }

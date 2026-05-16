@@ -28,6 +28,9 @@ export async function getPrimaryCreator() {
       name: "D•sonofSolomon",
       slug: fallbackSlug("dsonofsolomon"),
       bio: "Love, life, laughter and systems.",
+      heroImage: "/admin-hero-sample.svg",
+      heroImageAlt: "D•sonofSolomon hero cover",
+      currentWorkingOn: "The D•sonofSolomon writing system.",
     },
   });
 }
